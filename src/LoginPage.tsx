@@ -10,18 +10,15 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    await login(name, email);
-
-    // Wait a moment to ensure cookies are stored before navigating
-    setTimeout(() => {
-      navigate('/search'); 
-    }, 500);
-  } catch (err) {
-    setError('Login failed. Please check your details.');
-  }
-};
+    e.preventDefault();
+    try {
+      await login(name, email);
+      localStorage.setItem('isAuthenticated', 'true'); // ✅ Store authentication status
+      navigate('/search');
+    } catch (err) {
+      setError('Login failed. Please check your details.');
+    }
+  };
 
   return (
     <Container maxWidth="xs">

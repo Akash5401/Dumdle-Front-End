@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Autocomplete,
+  AppBar,
   TextField, 
   Button,
   Card,
   CardContent,
   CardMedia,
   Typography,
+  Toolbar,
   Container,
   Grid,
   Select,
@@ -21,6 +23,7 @@ import {
   InputAdornment,
   IconButton,
 } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { getBreeds, searchDogs, getDogs, generateMatch, getLocations, searchLocations, Dog, Location } from './api';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -153,14 +156,29 @@ const fetchZipCodeSuggestions = async (query: string) => {
         method: 'POST',
         credentials: 'include',
       });
+      localStorage.removeItem('isAuthenticated'); // ✅ Clear authentication status
       navigate('/login');
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
 
+
    return (
     <Container>
+{/* Top Right Logout Button */}
+      <AppBar position="absolute" sx={{ background: 'transparent', boxShadow: 'none' }}>
+        <Toolbar sx={{ justifyContent: 'flex-end' }}>
+          <IconButton color="primary" onClick={handleLogout}>
+            <LogoutIcon fontSize="large" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      {/* Content Below */}
+      <div style={{ marginTop: '60px' }}>
+        {/* Add your search UI here */}
+      </div>
       <Typography variant="h5" gutterBottom sx={{ mt: 3 }}>
         
       </Typography>
