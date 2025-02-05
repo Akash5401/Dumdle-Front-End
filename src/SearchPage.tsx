@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Autocomplete,
-  TextField,
+  TextField, 
   Button,
   Card,
   CardContent,
@@ -38,7 +38,7 @@ const SearchPage: React.FC = () => {
   const [stateFilter, setStateFilter] = useState<string>('');
   const [geoBoundingBox, setGeoBoundingBox] = useState<any>(null);
   
-  // Common state
+  // Common state p
   const [sortField, setSortField] = useState<'breed' | 'name' | 'age'>('breed');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [dogs, setDogs] = useState<Dog[]>([]);
