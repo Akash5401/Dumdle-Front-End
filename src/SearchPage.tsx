@@ -53,26 +53,26 @@ const SearchPage: React.FC = () => {
   }, []);
 
   const performSearch = async (query: string) => {
-    setIsLoading(true);
-    try {
-      const result = await searchDogs(query);
-      setSearchResult(result);
+  setIsLoading(true);
+  try {
+    const result = await searchDogs(query);
+    if (!result) return;
+    
+    setSearchResult(result);
 
-      const dogData = await getDogs(result.resultIds);
-      setDogs(dogData);
+    const dogData = await getDogs(result.resultIds);
+    setDogs(dogData);
 
-      const zipCodes = dogData.map((dog: Dog) => dog.zip_code);
-      const locations = await getLocations(zipCodes);
-      const zipMap = new Map<string, Location>(
-        locations.map((loc: Location) => [loc.zip_code, loc])
-      );
-      setLocationMap(zipMap);
-    } catch (error) {
-      console.error('Search failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const zipCodes = dogData.map((dog) => dog.zip_code);
+    const locations = await getLocations(zipCodes);
+    const zipMap = new Map(locations.map((loc) => [loc.zip_code, loc]));
+    setLocationMap(zipMap);
+  } catch (error) {
+    console.error('Search failed:', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleSearch = () => {
     const params = new URLSearchParams();
