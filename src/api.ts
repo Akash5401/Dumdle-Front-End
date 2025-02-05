@@ -42,20 +42,15 @@ export const getBreeds = async (): Promise<string[]> => {
 };
 
 export const searchDogs = async (query: string) => {
-  try {
-    const response = await axios.get<{
-      resultIds: string[];
-      total: number;
-      next?: string;
-      prev?: string;
-    }>(`${API_BASE}/dogs/search?${query}`, {
-      withCredentials: true, // Ensures authentication cookie is included
-    });
-    return response.data;
-  } catch (error) {
-    console.error("❌ Error searching dogs:", error.response?.data || error.message);
-    return { resultIds: [], total: 0 };
-  }
+  const response = await axios.get<{
+    resultIds: string[];
+    total: number;
+    next?: string;
+    prev?: string;
+  }>(`${API_BASE}/dogs/search?${query}`, { 
+    withCredentials: true 
+  });
+  return response.data;
 };
 
 export const getDogs = async (ids: string[]): Promise<Dog[]> => {
