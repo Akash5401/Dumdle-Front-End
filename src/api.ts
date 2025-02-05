@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 //const API_BASE = 'https://frontend-take-home-service.fetch.com';
-const API_BASE = https://dumdle-front-end.vercel.app/
+const API_BASE = 'https://dumdle-front-end.vercel.app/';
 
 export interface Dog {
   id: string;
