@@ -68,16 +68,13 @@ const SearchPage: React.FC = () => {
   const [zipCodeOptions, setZipCodeOptions] = useState<string[]>([]);
 
 const fetchZipCodeSuggestions = async (query: string) => {
-  if (!query || query.length < 2) return; // Only fetch suggestions after 2+ characters
+  if (!query || query.length < 2) return;
 
   try {
-    const locationQuery = {
-      zip_code_prefix: query, // Assuming API supports prefix search
-      size: 10, // Limit suggestions
-    };
+    const locationQuery = { city: query, size: 10 }; // 🔄 Search by city name
 
     const { results } = await searchLocations(locationQuery);
-    const zips = results.map((loc) => loc.zip_code); // Extract zip codes
+    const zips = results.map((loc) => loc.zip_code);
     setZipCodeOptions(zips);
   } catch (error) {
     console.error('Zip code search failed:', error);
