@@ -162,7 +162,7 @@ const fetchZipCodeSuggestions = async (query: string) => {
    return (
     <Container>
       <Typography variant="h5" gutterBottom sx={{ mt: 3 }}>
-        Search by Zip Code
+        
       </Typography>
       
       <Grid container spacing={2} alignItems="center">

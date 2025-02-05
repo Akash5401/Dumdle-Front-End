@@ -3,9 +3,172 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Fetch Dog Search</title>
+    <title>DUMBLE | Find Your Perfect Dog</title>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicon (Replace with your actual logo URL) -->
+    <link rel="icon" href="https://cdn.iconscout.com/icon/free/png-512/free-kid-and-dog-icon-download-in-svg-png-gif-file-formats--pet-family-pack-people-icons-2470894.png?f=webp&w=512" type="image/png" />
+
+    <style>
+      /* General Styles */
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(to right, #FFFFE7, #ff7eb3);
+        color: #333;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent; /* Blends with background */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 105, 135, 0.6); /* Soft pink */
+        border-radius: 5px;
+        transition: background 0.3s ease;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 105, 135, 0.8); /* Darker pink on hover */
+      }
+
+      /* Header */
+      .header-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      /* Logo */
+      #logo {
+        width: 80px;
+        height: 80px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      /* Title */
+      h1 {
+        font-family: "Pacifico", cursive;
+        font-size: 3rem;
+        margin: 0;
+        color: #ff4d6d;
+        transition: all 0.3s ease-in-out;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Tagline */
+      .tagline {
+        font-size: 1.2rem;
+        font-weight: 400;
+        opacity: 0.9;
+        color: #6a097d;
+        margin-top: 5px;
+        transition: all 0.3s ease-in-out;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Root Container */
+      #root {
+        width: 90%;
+        max-width: 900px;
+        flex: 1;
+        overflow: auto;
+        padding: 25px;
+        box-sizing: border-box;
+        border-radius: 15px;
+        box-shadow: none;
+      }
+
+      /* Form & Search Box Improvements */
+      input, button {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+        color: #333;
+        backdrop-filter: blur(5px);
+      }
+
+      input::placeholder {
+        color: rgba(0, 0, 0, 0.5);
+      }
+
+      button {
+        cursor: pointer;
+        font-weight: bold;
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      button:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.5rem;
+        }
+        #logo {
+          width: 70px;
+          height: 70px;
+        }
+        .tagline {
+          font-size: 1rem;
+        }
+        #root {
+          width: 95%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 2rem;
+        }
+        #logo {
+          width: 60px;
+          height: 60px;
+        }
+        .tagline {
+          font-size: 0.9rem;
+        }
+        #root {
+          width: 98%;
+          padding: 15px;
+        }
+      }
+    </style>
   </head>
   <body>
+    <!-- Header Section with Logo & Title -->
+    <div class="header-container">
+      <img id="logo" src="https://cdn.iconscout.com/icon/free/png-512/free-kid-and-dog-icon-download-in-svg-png-gif-file-formats--pet-family-pack-people-icons-2470894.png?f=webp&w=512" alt="DUMBLE Logo" />
+      <h1>DUMBLE</h1>
+    </div>
+    
+    <p class="tagline">Find your perfect dog match today! 🐶💖</p>
+
+    <!-- React App Mounting Point -->
     <div id="root"></div>
   </body>
 </html>
