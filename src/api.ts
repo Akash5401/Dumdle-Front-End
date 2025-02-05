@@ -53,6 +53,18 @@ export const searchDogs = async (query: string) => {
   return response.data;
 };
 
+export const searchLocations = async (
+  body: any
+): Promise<{ results: Location[]; total: number }> => {
+  const response = await axios.post<{ results: Location[]; total: number }>(
+    `${API_BASE}/locations/search`,
+    body,
+    { withCredentials: true }
+  );
+
+  return response.data;
+};
+
 export const getDogs = async (ids: string[]): Promise<Dog[]> => {
   const response = await axios.post<Dog[]>(`${API_BASE}/dogs`, ids, { 
     withCredentials: true 

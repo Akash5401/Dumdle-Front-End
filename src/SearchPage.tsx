@@ -17,15 +17,28 @@ import {
   DialogContent,
   DialogActions,
   CircularProgress,
+  Chip,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
-import { getBreeds, searchDogs, getDogs, generateMatch, getLocations, Dog, Location } from './api';
+import { getBreeds, searchDogs, getDogs, generateMatch, getLocations, searchLocations, Dog, Location } from './api';
+import SearchIcon from '@mui/icons-material/Search';
 
 const SearchPage: React.FC = () => {
   const navigate = useNavigate();
+  // State for dog filtering
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
   const [ageMin, setAgeMin] = useState<number | undefined>();
   const [ageMax, setAgeMax] = useState<number | undefined>();
+  
+  // State for location filtering
+  const [zipCodes, setZipCodes] = useState<string[]>([]);
+  const [city, setCity] = useState<string>('');
+  const [stateFilter, setStateFilter] = useState<string>('');
+  const [geoBoundingBox, setGeoBoundingBox] = useState<any>(null);
+  
+  // Common state
   const [sortField, setSortField] = useState<'breed' | 'name' | 'age'>('breed');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -41,50 +54,79 @@ const SearchPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchBreeds = async () => {
+    const initializeData = async () => {
       try {
         const breeds = await getBreeds();
         setBreeds(breeds);
       } catch (error) {
-        console.error('Failed to fetch breeds:', error);
+        console.error('Failed to fetch initial data:', error);
       }
     };
-    fetchBreeds();
+    initializeData();
   }, []);
 
-  const performSearch = async (query: string) => {
-  setIsLoading(true);
+  const [zipCodeOptions, setZipCodeOptions] = useState<string[]>([]);
+
+const fetchZipCodeSuggestions = async (query: string) => {
+  if (!query || query.length < 2) return; // Only fetch suggestions after 2+ characters
+
   try {
-    const result = await searchDogs(query);
-    if (!result) return;
-    
-    setSearchResult(result);
+    const locationQuery = {
+      zip_code_prefix: query, // Assuming API supports prefix search
+      size: 10, // Limit suggestions
+    };
 
-    const dogData = await getDogs(result.resultIds);
-    setDogs(dogData);
-
-    const zipCodes = dogData.map((dog) => dog.zip_code);
-    const locations = await getLocations(zipCodes);
-    const zipMap = new Map(locations.map((loc) => [loc.zip_code, loc]));
-    setLocationMap(zipMap);
+    const { results } = await searchLocations(locationQuery);
+    const zips = results.map((loc) => loc.zip_code); // Extract zip codes
+    setZipCodeOptions(zips);
   } catch (error) {
-    console.error('Search failed:', error);
-  } finally {
-    setIsLoading(false);
+    console.error('Zip code search failed:', error);
   }
 };
 
-  const handleSearch = () => {
-    const params = new URLSearchParams();
-    selectedBreeds.forEach((breed) => params.append('breeds', breed));
-    if (ageMin) params.append('ageMin', ageMin.toString());
-    if (ageMax) params.append('ageMax', ageMax.toString());
-    params.append('sort', `${sortField}:${sortDirection}`);
-    params.append('size', '25');
-    params.append('from', '0');
+  const performSearch = async (query: string) => {
+    setIsLoading(true);
+    try {
+      const result = await searchDogs(query);
+      setSearchResult(result);
 
-    performSearch(params.toString());
+      const dogData = await getDogs(result.resultIds);
+      setDogs(dogData);
+
+      const locations = await getLocations(dogData.map(dog => dog.zip_code));
+      const zipMap = new Map(locations.map(loc => [loc.zip_code, loc]));
+      setLocationMap(zipMap);
+    } catch (error) {
+      console.error('Dog search failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const handleSearch = () => {
+  const params = new URLSearchParams();
+
+  // Add breed filters
+  selectedBreeds.forEach((breed) => params.append('breeds', breed));
+
+  // Add zip code filters
+  zipCodes.forEach((zip) => params.append('zipCodes', zip));
+
+  // Add age filters (only if provided)
+  if (ageMin) params.append('ageMin', ageMin.toString());
+  if (ageMax) params.append('ageMax', ageMax.toString());
+
+  // Add sorting
+  params.append('sort', `${sortField}:${sortDirection}`);
+  params.append('size', '25');
+  params.append('from', '0');
+
+  // Perform the search with all filters
+  performSearch(params.toString());
+};
+
+
+
 
   const handlePageChange = (query: string | undefined) => {
     if (query) {
@@ -120,13 +162,10 @@ const SearchPage: React.FC = () => {
     }
   };
 
-  return (
+   return (
     <Container>
-      <Button onClick={handleLogout} style={{ position: 'absolute', top: 16, right: 16 }}>
-        Logout
-      </Button>
-      <Typography variant="h4" gutterBottom>
-        Search Dogs
+      <Typography variant="h5" gutterBottom sx={{ mt: 3 }}>
+        Search by Zip Code
       </Typography>
       
       <Grid container spacing={2} alignItems="center">
@@ -172,7 +211,41 @@ const SearchPage: React.FC = () => {
   />
 </Grid>
 
-        
+        <Grid item xs={6} sm={3}>
+  <Autocomplete
+    multiple
+    freeSolo
+    options={zipCodeOptions} // Dynamic zip code suggestions
+    value={zipCodes}
+    onChange={(_, newValue) => {
+      if (newValue.length <= 6) setZipCodes(newValue); // Limit to 6 zip codes
+    }}
+    onInputChange={(_, value) => fetchZipCodeSuggestions(value)} // Fetch suggestions
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        label="Zip Codes"
+        placeholder="Enter or search for zip codes"
+        InputProps={{
+          ...params.InputProps,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={() => fetchZipCodeSuggestions('')}>
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+    )}
+    renderTags={(value, getTagProps) =>
+      value.map((option, index) => (
+        <Chip label={option} {...getTagProps({ index })} key={index} />
+      ))
+    }
+  />
+</Grid>
+
         <Grid item xs={6} sm={3}>
           <Select
             value={sortField}
