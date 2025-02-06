@@ -12,7 +12,7 @@ A React application for searching and matching shelter dogs, built for Fetch's f
 ## Setup
 1. Clone the repo:
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
+   git clone https://github.com/Akash5401/Dumdle-Front-End.git
    ```
 2. Install dependencies:
    ```bash
